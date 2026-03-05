@@ -165,3 +165,64 @@ export interface BirdeyeV3TokenTrade {
 export interface BirdeyeV3TokenTradeResponse {
   items: BirdeyeV3TokenTrade[];
 }
+
+// ─── Smart Money ──────────────────────────────────────────────────
+
+export interface BirdeyeSmartMoneyToken {
+  address: string;
+  symbol: string;
+  name: string;
+  logo_uri: string;
+  price: number;
+  price_change_24h: number;
+  net_flow: number;
+  smart_traders_no: number;
+  smart_buy_no: number;
+  smart_sell_no: number;
+  market_cap: number;
+}
+
+export interface BirdeyeSmartMoneyResponse {
+  items: BirdeyeSmartMoneyToken[];
+}
+
+// ─── Gainers / Losers ─────────────────────────────────────────────
+
+export interface BirdeyeGainerLoser {
+  address: string;
+  pnl: number;
+  trade_count: number;
+  token_traded: number;
+}
+
+export interface BirdeyeGainerLoserResponse {
+  items: BirdeyeGainerLoser[];
+}
+
+// ─── Meme Tokens ──────────────────────────────────────────────────
+
+export interface BirdeyeMemeToken {
+  address: string;
+  symbol: string;
+  name: string;
+  logo_uri: string;
+  price: number;
+  price_change_24h_percent: number;
+  volume_24h_usd: number;
+  liquidity: number;
+  market_cap: number;
+  fdv: number;
+  creation_time: number; // unix seconds
+  total_supply: number;
+  decimals: number;
+  extensions?: {
+    twitter?: string;
+    website?: string;
+    description?: string;
+  };
+}
+
+export interface BirdeyeMemeListResponse {
+  items: BirdeyeMemeToken[];
+  total: number;
+}

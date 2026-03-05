@@ -199,4 +199,42 @@ export const getSmartMoneyTokens = async (
   return data.data;
 };
 
+// ─── Whale Trades (top volume recent trades) ─────────────────────
+
+export const getWhaleTrades = async (limit: number = 500) => {
+  const { data } = await birdeyeClient.get('/defi/v3/txs/recent', {
+    params: { tx_type: 'swap', limit },
+  });
+  // Sort by volume desc and take the top 30 — these are the biggest recent swaps
+  const items = (data.data?.items ?? [])
+    .sort(
+      (a: { volume_usd: number }, b: { volume_usd: number }) =>
+        b.volume_usd - a.volume_usd
+    )
+    .slice(0, 30);
+  return { items };
+};
+
+// ─── Top Gainers / Losers ───────────────────────────────────────────
+
+export const getTopGainers = async (
+  type: 'today' | 'yesterday' | '1W' = 'today',
+  limit: number = 5
+) => {
+  const { data } = await birdeyeClient.get('/trader/gainers-losers', {
+    params: { type, sort_by: 'PnL', sort_type: 'desc', limit },
+  });
+  return data.data;
+};
+
+export const getTopLosers = async (
+  type: 'today' | 'yesterday' | '1W' = 'today',
+  limit: number = 5
+) => {
+  const { data } = await birdeyeClient.get('/trader/gainers-losers', {
+    params: { type, sort_by: 'PnL', sort_type: 'asc', limit },
+  });
+  return data.data;
+};
+
 export default birdeyeClient;
