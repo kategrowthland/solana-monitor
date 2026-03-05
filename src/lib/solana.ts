@@ -2,8 +2,10 @@ import { Connection } from '@solana/web3.js';
 
 // ─── Singleton connection ─────────────────────────────────────────
 
+// Ankr's free public RPC has better CORS support and higher rate limits
+// than api.mainnet-beta.solana.com for browser-based clients
 export const solanaConnection = new Connection(
-    'https://api.mainnet-beta.solana.com',
+    import.meta.env.VITE_SOLANA_RPC_URL || 'https://rpc.ankr.com/solana',
     'confirmed'
 );
 

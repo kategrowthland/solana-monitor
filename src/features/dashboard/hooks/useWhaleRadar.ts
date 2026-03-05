@@ -31,7 +31,7 @@ export const useSmartMoney = (interval: string = '1d') =>
 export const useTopGainers = () =>
   useQuery({
     queryKey: ['top-gainers'],
-    queryFn: () => getTopGainers('today', 5),
+    queryFn: () => getTopGainers(5),
     refetchInterval: 60_000,
     staleTime: 30_000,
   });
@@ -39,7 +39,7 @@ export const useTopGainers = () =>
 export const useTopLosers = () =>
   useQuery({
     queryKey: ['top-losers'],
-    queryFn: () => getTopLosers('today', 5),
+    queryFn: () => getTopLosers(5),
     refetchInterval: 60_000,
     staleTime: 30_000,
   });

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getTrendingTokens, getTokenSecurity } from '@/lib/api/birdeye';
+import { getMemeTokens, getTokenSecurity } from '@/lib/api/birdeye';
 import type { SecurityAlert, AlertSeverity, RiskSignal } from '../types/security';
 import { SEVERITY_ORDER } from '../types/security';
 
@@ -97,8 +97,9 @@ export const useSecurityAlerts = () => {
     return useQuery<SecurityAlert[]>({
         queryKey: ['security', 'alerts'],
         queryFn: async () => {
-            // Step 1: fetch top 20 trending tokens
-            const raw = await getTrendingTokens('rank', 'asc', 20);
+            // Step 1: fetch recently created meme tokens — far more likely to have security issues
+            // than established trending tokens like BONK/JUP which are always clean
+            const raw = await getMemeTokens('creation_time', 'desc', 20);
             const items: TokenBase[] = Array.isArray(raw?.items)
                 ? raw.items
                 : Array.isArray(raw)

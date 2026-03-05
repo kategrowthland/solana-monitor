@@ -215,24 +215,28 @@ export const getWhaleTrades = async (limit: number = 500) => {
   return { items };
 };
 
-// ─── Top Gainers / Losers ───────────────────────────────────────────
+// ─── Top Gainers / Losers (by token price change) ──────────────────
 
-export const getTopGainers = async (
-  type: 'today' | 'yesterday' | '1W' = 'today',
-  limit: number = 5
-) => {
-  const { data } = await birdeyeClient.get('/trader/gainers-losers', {
-    params: { type, sort_by: 'PnL', sort_type: 'desc', limit },
+export const getTopGainers = async (limit: number = 10) => {
+  const { data } = await birdeyeClient.get('/defi/v3/token/list', {
+    params: {
+      sort_by: 'price_change_24h_percent',
+      sort_type: 'desc',
+      min_liquidity: 50000,
+      limit,
+    },
   });
   return data.data;
 };
 
-export const getTopLosers = async (
-  type: 'today' | 'yesterday' | '1W' = 'today',
-  limit: number = 5
-) => {
-  const { data } = await birdeyeClient.get('/trader/gainers-losers', {
-    params: { type, sort_by: 'PnL', sort_type: 'asc', limit },
+export const getTopLosers = async (limit: number = 10) => {
+  const { data } = await birdeyeClient.get('/defi/v3/token/list', {
+    params: {
+      sort_by: 'price_change_24h_percent',
+      sort_type: 'asc',
+      min_liquidity: 50000,
+      limit,
+    },
   });
   return data.data;
 };

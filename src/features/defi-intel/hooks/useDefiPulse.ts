@@ -13,10 +13,10 @@ const normGainer = (raw: any): GainerLoser => ({
     symbol: raw.symbol ?? '???',
     logoURI: raw.logoURI ?? raw.logo_uri,
     price: raw.price ?? 0,
-    pnl: raw.pnl ?? raw.PnL ?? 0,
-    priceChangePercent: raw.price_change_24h_percent ?? raw.priceChangePercent ?? 0,
-    volume24h: raw.volume_24h_usd ?? raw.volume24h ?? 0,
-    marketcap: raw.market_cap ?? raw.marketcap ?? 0,
+    pnl: raw.price_change_24h_percent ?? 0,
+    priceChangePercent: raw.price_change_24h_percent ?? 0,
+    volume24h: raw.volume_24h_usd ?? raw.v24hUSD ?? 0,
+    marketcap: raw.market_cap ?? raw.mc ?? 0,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,7 +38,7 @@ export const useDefiPulse = () => {
     const gainersQ = useQuery({
         queryKey: ['defi', 'gainers'],
         queryFn: async () => {
-            const raw = await getTopGainers('today', 10);
+            const raw = await getTopGainers(10);
             const items = Array.isArray(raw?.items) ? raw.items : Array.isArray(raw) ? raw : [];
             return items.map(normGainer) as GainerLoser[];
         },
@@ -49,7 +49,7 @@ export const useDefiPulse = () => {
     const losersQ = useQuery({
         queryKey: ['defi', 'losers'],
         queryFn: async () => {
-            const raw = await getTopLosers('today', 10);
+            const raw = await getTopLosers(10);
             const items = Array.isArray(raw?.items) ? raw.items : Array.isArray(raw) ? raw : [];
             return items.map(normGainer) as GainerLoser[];
         },
