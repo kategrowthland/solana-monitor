@@ -1,6 +1,5 @@
 import { TrendingTokensPanel } from './components/TrendingTokensPanel';
 import { LiveTradeFeedPanel } from './components/LiveTradeFeedPanel';
-import { NetworkGlobePanel } from './components/NetworkGlobePanel';
 import { WhaleRadarPanel } from './components/WhaleRadarPanel';
 import { MemeMonitorPanel } from '@/features/meme-monitor';
 import { NetworkHealthPanel } from '@/features/network-health';
@@ -10,9 +9,6 @@ import { SecurityAlertsPanel } from '@/features/security';
 export const Dashboard = () => {
   return (
     <div className="grid grid-cols-4 gap-[var(--panel-gap)] auto-rows-[minmax(200px,1fr)]">
-      {/* ✅ LIVE: Network Globe — spans 2 cols, 2 rows */}
-      <NetworkGlobePanel />
-
       {/* ✅ LIVE: Trending Tokens — spans 2 cols for full table width */}
       <div className="col-span-2 row-span-2">
         <TrendingTokensPanel />
