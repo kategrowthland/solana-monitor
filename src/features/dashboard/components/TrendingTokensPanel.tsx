@@ -4,6 +4,7 @@ import { Panel } from '@/components/shared/Panel';
 import { useTrendingTokens } from '../hooks/useTrendingTokens';
 import { formatPrice, formatCompact, formatPercent } from '@/utils/formatNumber';
 import { cn } from '@/lib/utils';
+import { useTokenStore } from '@/stores/tokenStore';
 import type { BirdeyeTrendingToken } from '@/types/birdeye';
 
 export const TrendingTokensPanel = () => {
@@ -63,12 +64,14 @@ interface TokenRowProps {
 
 const TokenRow = ({ token, index }: TokenRowProps) => {
   const isPositive = token.price24hChangePercent >= 0;
+  const selectToken = useTokenStore((s) => s.selectToken);
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -6 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.2, delay: index * 0.02 }}
+      onClick={() => selectToken(token.address, token.symbol, token.logoURI)}
       className="grid grid-cols-[24px_minmax(0,1fr)_minmax(70px,auto)_minmax(60px,auto)_minmax(50px,auto)] gap-x-3 items-center px-2 py-2.5 rounded-lg hover:bg-[var(--bg-hover)] transition-colors cursor-pointer group"
     >
       {/* Rank */}

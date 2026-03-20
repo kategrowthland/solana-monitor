@@ -3,7 +3,6 @@ import {
   Activity,
   ArrowUpRight,
   ArrowDownRight,
-  Brain,
   TrendingUp,
   TrendingDown,
   Pause,
@@ -13,7 +12,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Panel } from '@/components/shared/Panel';
 import {
   useWhaleFeed,
-  useSmartMoney,
   useTopGainers,
   useTopLosers,
 } from '../hooks/useWhaleRadar';
@@ -23,7 +21,7 @@ import { timeAgo } from '@/utils/formatTime';
 import { cn } from '@/lib/utils';
 import { useTokenStore } from '@/stores/tokenStore';
 
-type Tab = 'whales' | 'smart' | 'gainers';
+type Tab = 'whales' | 'gainers';
 
 // ─── V3 Recent Trade shape (base/quote with type_swap) ──────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,7 +67,6 @@ const normalizeTrade = (raw: RawRecentTrade): NormalizedTrade => {
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'whales', label: 'Whale Feed' },
-  { id: 'smart', label: 'Smart Money' },
   { id: 'gainers', label: 'Gainers/Losers' },
 ];
 
@@ -135,7 +132,6 @@ export const WhaleRadarPanel = () => {
       }
     >
       {tab === 'whales' && <WhaleFeedTab paused={paused} />}
-      {tab === 'smart' && <SmartMoneyTab />}
       {tab === 'gainers' && <GainersLosersTab />}
     </Panel>
   );
@@ -267,123 +263,6 @@ const WhaleTradeRow = ({ trade }: { trade: NormalizedTrade }) => {
     </motion.div>
   );
 };
-
-// ═══════════════════════════════════════════════════════════════════
-// TAB B — SMART MONEY CONSENSUS
-// ═══════════════════════════════════════════════════════════════════
-
-const INTERVALS = ['1d', '7d', '30d'] as const;
-
-const SmartMoneyTab = () => {
-  const [interval, setInterval] = useState<string>('1d');
-  const { data, isLoading } = useSmartMoney(interval);
-  const selectToken = useTokenStore((s) => s.selectToken);
-
-  // Smart Money API returns a direct array, not { items: [...] }
-  const tokens = Array.isArray(data) ? data : (data?.items ?? []);
-
-  return (
-    <div className="flex flex-col max-h-[520px]">
-      {/* Interval toggle */}
-      <div className="flex items-center gap-1 px-2 py-1.5 border-b border-[var(--border-subtle)]">
-        <Brain size={10} className="text-[var(--text-muted)]" />
-        <span className="text-[10px] text-[var(--text-muted)] mr-2">Interval:</span>
-        {INTERVALS.map((iv) => (
-          <button
-            key={iv}
-            onClick={() => setInterval(iv)}
-            className={cn(
-              'px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors',
-              interval === iv
-                ? 'bg-[var(--accent-current)]/20 text-[var(--accent-current)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
-            )}
-          >
-            {iv}
-          </button>
-        ))}
-      </div>
-
-      {isLoading && tokens.length === 0 ? (
-        <div className="flex items-center justify-center py-10">
-          <div className="w-5 h-5 rounded-full border-2 border-[var(--text-muted)] border-t-[var(--accent-current)] animate-spin" />
-        </div>
-      ) : (
-        <>
-          {/* Table header */}
-          <div className="grid grid-cols-[1fr_70px_90px_60px] gap-2 px-2 py-1.5 text-[10px] uppercase tracking-wider text-[var(--text-muted)] border-b border-[var(--border-subtle)]">
-            <span>Token</span>
-            <span className="text-right">SM Buys</span>
-            <span className="text-right">Net Flow</span>
-            <span className="text-right">Trend</span>
-          </div>
-
-          {/* Rows */}
-          <div className="overflow-y-auto">
-            {tokens.map((token: SmartMoneyRow, i: number) => (
-              <div
-                key={`${token.token ?? token.address}-${i}`}
-                onClick={() => selectToken(token.token ?? token.address, token.symbol, token.logo_uri)}
-                className="grid grid-cols-[1fr_70px_90px_60px] gap-2 items-center px-2 py-2 hover:bg-[var(--bg-hover)] cursor-pointer transition-colors rounded-md"
-              >
-                {/* Token */}
-                <div className="flex items-center gap-2 min-w-0">
-                  {token.logo_uri ? (
-                    <img
-                      src={token.logo_uri}
-                      alt={token.symbol}
-                      className="w-5 h-5 rounded-full shrink-0"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                  ) : (
-                    <div className="w-5 h-5 rounded-full bg-[var(--bg-hover)] shrink-0" />
-                  )}
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-medium text-[var(--text-primary)] truncate">
-                      {token.symbol}
-                    </span>
-                    <span className="text-[10px] text-[var(--text-muted)] truncate">
-                      {token.name}
-                    </span>
-                  </div>
-                </div>
-
-                {/* SM Buys */}
-                <span className="text-xs mono text-right text-[var(--positive)]">
-                  {token.smart_buy_no ?? token.smart_traders_no ?? 0}
-                </span>
-
-                {/* Net Flow */}
-                <span
-                  className={cn(
-                    'text-xs mono text-right font-medium',
-                    (token.net_flow ?? 0) >= 0
-                      ? 'text-[var(--positive)]'
-                      : 'text-[var(--negative)]'
-                  )}
-                >
-                  {(token.net_flow ?? 0) >= 0 ? '+' : ''}${formatCompact(Math.abs(token.net_flow ?? 0))}
-                </span>
-
-                {/* Trend */}
-                <div className="flex justify-end">
-                  {(token.net_flow ?? 0) >= 0 ? (
-                    <TrendingUp size={12} className="text-[var(--positive)]" />
-                  ) : (
-                    <TrendingDown size={12} className="text-[var(--negative)]" />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SmartMoneyRow = any;
 
 // ═══════════════════════════════════════════════════════════════════
 // TAB C — TOP GAINERS & LOSERS

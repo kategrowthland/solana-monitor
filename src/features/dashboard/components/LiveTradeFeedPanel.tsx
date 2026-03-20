@@ -6,6 +6,7 @@ import { formatCompact } from '@/utils/formatNumber';
 import { truncateAddress } from '@/utils/formatAddress';
 import { timeAgo } from '@/utils/formatTime';
 import { cn } from '@/lib/utils';
+import { useTokenStore } from '@/stores/tokenStore';
 import type { NormalizedTrade } from '@/types/trades';
 
 export const LiveTradeFeedPanel = () => {
@@ -77,6 +78,7 @@ interface TradeRowProps {
 
 const TradeRow = ({ trade }: TradeRowProps) => {
   const isBuy = trade.direction === 'buy';
+  const selectToken = useTokenStore((s) => s.selectToken);
 
   return (
     <motion.div
@@ -85,6 +87,7 @@ const TradeRow = ({ trade }: TradeRowProps) => {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
+      onClick={() => selectToken(trade.baseAddress, trade.baseSymbol)}
       className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[var(--bg-hover)] transition-colors cursor-pointer group"
     >
       {/* Direction icon */}

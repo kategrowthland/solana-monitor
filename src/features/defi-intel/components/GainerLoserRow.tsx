@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { formatPrice, formatCompact, formatPercent } from '@/utils/formatNumber';
+import { useTokenStore } from '@/stores/tokenStore';
 import type { GainerLoser } from '../types/defi';
 
 interface GainerLoserRowProps {
@@ -14,15 +15,17 @@ export const GainerLoserRow = ({ item, index, mode }: GainerLoserRowProps) => {
     const pctValue = item.priceChangePercent !== 0
         ? item.priceChangePercent
         : isPositive ? Math.abs(item.pnl) : -Math.abs(item.pnl);
+    const selectToken = useTokenStore((s) => s.selectToken);
 
     return (
         <motion.div
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.18, delay: Math.min(index * 0.04, 0.4) }}
+            onClick={() => selectToken(item.address, item.symbol, item.logoURI)}
             className={cn(
                 'group flex items-center gap-3 px-3 py-2 rounded-lg',
-                'hover:bg-[var(--bg-hover)] transition-colors duration-150 cursor-default'
+                'hover:bg-[var(--bg-hover)] transition-colors duration-150 cursor-pointer'
             )}
         >
             {/* Rank */}
@@ -50,7 +53,7 @@ export const GainerLoserRow = ({ item, index, mode }: GainerLoserRowProps) => {
 
             {/* Name */}
             <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-xs font-semibold text-[var(--text-primary)] truncate">
+                <span className="text-xs font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--accent-current)] transition-colors">
                     {item.symbol}
                 </span>
                 <span className="text-[10px] text-[var(--text-muted)] truncate">
