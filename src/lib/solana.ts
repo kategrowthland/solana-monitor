@@ -1,9 +1,6 @@
 // ─── Solana JSON-RPC helpers (no @solana/web3.js — avoids Vite polyfill issues) ──
 
-const RPC_URL =
-    (typeof import.meta !== 'undefined' && (import.meta as Record<string, unknown>).env
-        ? (import.meta as { env: Record<string, string> }).env.VITE_SOLANA_RPC_URL
-        : undefined) || 'https://rpc.ankr.com/solana';
+const RPC_URL = import.meta.env.VITE_SOLANA_RPC_URL || 'https://rpc.ankr.com/solana';
 
 let _reqId = 0;
 
