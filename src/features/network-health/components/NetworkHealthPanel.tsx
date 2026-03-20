@@ -45,6 +45,7 @@ export const NetworkHealthPanel = () => {
             title="Network Health"
             icon={<Zap size={14} />}
             collapsible
+            className="col-span-2"
             headerAction={
                 <div className="flex items-center gap-1.5">
                     {/* Live epoch indicator */}

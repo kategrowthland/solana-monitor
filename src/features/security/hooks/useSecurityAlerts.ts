@@ -106,22 +106,21 @@ export const useSecurityAlerts = () => {
                     ? raw
                     : [];
 
-            // Step 2: fetch security data for each token with a small delay to avoid rate limiting
+            // Step 2: fetch security data in parallel batches of 5 to avoid rate limiting
+            const BATCH_SIZE = 5;
             const allAlerts: SecurityAlert[] = [];
-            const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+            const validItems = items.filter((t) => !!t.address);
 
-            for (let i = 0; i < items.length; i++) {
-                const token = items[i];
-                if (!token.address) continue;
-                try {
-                    const sec = await getTokenSecurity(token.address);
-                    const alerts = evalSecurity(token, sec);
-                    allAlerts.push(...alerts);
-                } catch {
-                    // Ignore individual token failures
-                }
-                // 200ms gap between requests
-                if (i < items.length - 1) await delay(200);
+            for (let i = 0; i < validItems.length; i += BATCH_SIZE) {
+                const batch = validItems.slice(i, i + BATCH_SIZE);
+                const results = await Promise.allSettled(
+                    batch.map((token) => getTokenSecurity(token.address))
+                );
+                results.forEach((result, idx) => {
+                    const token = batch[idx];
+                    const sec = result.status === 'fulfilled' ? result.value : null;
+                    allAlerts.push(...evalSecurity(token, sec));
+                });
             }
 
             // Sort by severity then timestamp (newest first within same severity)

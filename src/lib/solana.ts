@@ -1,13 +1,23 @@
-import { Connection } from '@solana/web3.js';
+// ─── Solana JSON-RPC helpers (no @solana/web3.js — avoids Vite polyfill issues) ──
 
-// ─── Singleton connection ─────────────────────────────────────────
+const RPC_URL =
+    (typeof import.meta !== 'undefined' && (import.meta as Record<string, unknown>).env
+        ? (import.meta as { env: Record<string, string> }).env.VITE_SOLANA_RPC_URL
+        : undefined) || 'https://rpc.ankr.com/solana';
 
-// Ankr's free public RPC has better CORS support and higher rate limits
-// than api.mainnet-beta.solana.com for browser-based clients
-export const solanaConnection = new Connection(
-    import.meta.env.VITE_SOLANA_RPC_URL || 'https://rpc.ankr.com/solana',
-    'confirmed'
-);
+let _reqId = 0;
+
+async function rpc<T>(method: string, params: unknown[] = []): Promise<T> {
+    const res = await fetch(RPC_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', id: ++_reqId, method, params }),
+    });
+    if (!res.ok) throw new Error(`Solana RPC ${method} HTTP ${res.status}`);
+    const json = await res.json();
+    if (json.error) throw new Error(`Solana RPC ${method}: ${json.error.message}`);
+    return json.result as T;
+}
 
 // ─── TPS Samples ─────────────────────────────────────────────────
 
@@ -19,8 +29,8 @@ export interface TpsSample {
 }
 
 export const fetchTpsSamples = async (limit = 60): Promise<TpsSample[]> => {
-    const samples = await solanaConnection.getRecentPerformanceSamples(limit);
-    // SDK returns newest-first; reverse so we get chronological order
+    const samples = await rpc<TpsSample[]>('getRecentPerformanceSamples', [limit]);
+    // RPC returns newest-first; reverse to get chronological order
     return [...samples].reverse();
 };
 
@@ -36,15 +46,7 @@ export interface SolanaEpochInfo {
 }
 
 export const fetchEpochInfo = async (): Promise<SolanaEpochInfo> => {
-    const info = await solanaConnection.getEpochInfo();
-    return {
-        epoch: info.epoch,
-        slotIndex: info.slotIndex,
-        slotsInEpoch: info.slotsInEpoch,
-        absoluteSlot: info.absoluteSlot,
-        blockHeight: info.blockHeight,
-        transactionCount: info.transactionCount,
-    };
+    return rpc<SolanaEpochInfo>('getEpochInfo', []);
 };
 
 // ─── Vote Accounts ────────────────────────────────────────────────
@@ -63,28 +65,42 @@ export interface VoteAccountsResult {
     delinquent: VoteAccountInfo[];
 }
 
+interface RawVoteAccount {
+    votePubkey: string;
+    nodePubkey: string;
+    activatedStake: number;
+    commission: number;
+    epochCredits: [number, number, number][];
+    lastVote: number;
+}
+
+interface RawVoteAccountsResult {
+    current: RawVoteAccount[];
+    delinquent: RawVoteAccount[];
+}
+
 export const fetchVoteAccounts = async (): Promise<VoteAccountsResult> => {
-    const result = await solanaConnection.getVoteAccounts();
-    const map = (v: typeof result.current[0]): VoteAccountInfo => ({
+    const result = await rpc<RawVoteAccountsResult>('getVoteAccounts', []);
+    const map = (v: RawVoteAccount): VoteAccountInfo => ({
         votePubkey: v.votePubkey,
         nodePubkey: v.nodePubkey,
         activatedStake: v.activatedStake,
         commission: v.commission,
-        epochCredits: v.epochCredits.map((ec) => ({
-            epoch: ec[0],
-            credits: ec[1],
-            previousCredits: ec[2],
+        epochCredits: (v.epochCredits ?? []).map(([epoch, credits, previousCredits]) => ({
+            epoch,
+            credits,
+            previousCredits,
         })),
         lastVote: v.lastVote,
     });
     return {
-        current: result.current.map(map),
-        delinquent: result.delinquent.map(map),
+        current: (result.current ?? []).map(map),
+        delinquent: (result.delinquent ?? []).map(map),
     };
 };
 
 // ─── Current Slot ─────────────────────────────────────────────────
 
 export const fetchCurrentSlot = async (): Promise<number> => {
-    return solanaConnection.getSlot();
+    return rpc<number>('getSlot', []);
 };
