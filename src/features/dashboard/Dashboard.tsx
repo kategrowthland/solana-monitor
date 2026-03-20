@@ -8,7 +8,7 @@ import { SecurityAlertsPanel } from '@/features/security';
 
 export const Dashboard = () => {
   return (
-    <div className="grid grid-cols-4 gap-[var(--panel-gap)] auto-rows-[minmax(200px,1fr)]">
+    <div className="grid grid-cols-4 gap-[var(--panel-gap)] auto-rows-[minmax(200px,auto)]">
       {/* ✅ LIVE: Trending Tokens — spans 2 cols for full table width */}
       <div className="col-span-2 row-span-2">
         <TrendingTokensPanel />
