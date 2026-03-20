@@ -19,9 +19,9 @@ const CustomTooltip = ({ active, payload }: any) => {
     if (!active || !payload?.length) return null;
     const tps: number = payload[0]?.value ?? 0;
     return (
-        <div className="bg-[var(--bg-panel)] border border-[var(--panel-border)] rounded-lg px-2.5 py-1.5 text-xs shadow-lg">
-            <span className="text-[var(--text-muted)]">TPS: </span>
-            <span className="text-[var(--text-primary)] mono font-semibold tabular-nums">
+        <div className="bg-card border border-border rounded-lg px-2.5 py-1.5 text-xs shadow-lg">
+            <span className="text-muted-foreground">TPS: </span>
+            <span className="text-foreground font-mono font-semibold tabular-nums">
                 {tps.toLocaleString()}
             </span>
         </div>
@@ -32,7 +32,7 @@ export const TpsChart = ({ samples, peakTps }: TpsChartProps) => {
     if (samples.length < 2) {
         return (
             <div className="flex items-center justify-center h-[100px]">
-                <div className="w-4 h-4 rounded-full border-2 border-[var(--text-muted)] border-t-[var(--accent-current)] animate-spin" />
+                <div className="w-4 h-4 rounded-full border-2 border-muted border-t-primary animate-spin" />
             </div>
         );
     }
@@ -46,14 +46,14 @@ export const TpsChart = ({ samples, peakTps }: TpsChartProps) => {
                 <AreaChart data={samples} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                     <defs>
                         <linearGradient id="tpsGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#F7931A" stopOpacity={0.35} />
-                            <stop offset="95%" stopColor="#F7931A" stopOpacity={0.02} />
+                            <stop offset="5%" stopColor="hsl(263, 100%, 63%)" stopOpacity={0.35} />
+                            <stop offset="95%" stopColor="hsl(263, 100%, 63%)" stopOpacity={0.02} />
                         </linearGradient>
                     </defs>
 
                     <XAxis dataKey="t" hide />
                     <YAxis
-                        tick={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'JetBrains Mono' }}
+                        tick={{ fontSize: 9, fill: 'hsl(228, 8%, 50%)', fontFamily: 'Geist Mono, JetBrains Mono, monospace' }}
                         tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v))}
                         width={32}
                     />
@@ -62,14 +62,14 @@ export const TpsChart = ({ samples, peakTps }: TpsChartProps) => {
                     {showPeak && (
                         <ReferenceLine
                             y={peakTps}
-                            stroke="rgba(247,147,26,0.3)"
+                            stroke="hsl(263, 100%, 63%, 0.3)"
                             strokeDasharray="3 3"
                             label={{
                                 value: `peak ${peakTps.toLocaleString()}`,
                                 position: 'right',
-                                fill: 'var(--text-muted)',
+                                fill: 'hsl(228, 8%, 50%)',
                                 fontSize: 8,
-                                fontFamily: 'JetBrains Mono',
+                                fontFamily: 'Geist Mono, JetBrains Mono, monospace',
                             }}
                         />
                     )}
@@ -77,11 +77,11 @@ export const TpsChart = ({ samples, peakTps }: TpsChartProps) => {
                     <Area
                         type="monotone"
                         dataKey="tps"
-                        stroke="#F7931A"
+                        stroke="hsl(263, 100%, 63%)"
                         strokeWidth={1.5}
                         fill="url(#tpsGrad)"
                         dot={false}
-                        activeDot={{ r: 3, fill: '#F7931A', strokeWidth: 0 }}
+                        activeDot={{ r: 3, fill: 'hsl(263, 100%, 63%)', strokeWidth: 0 }}
                         isAnimationActive={false}
                     />
                 </AreaChart>

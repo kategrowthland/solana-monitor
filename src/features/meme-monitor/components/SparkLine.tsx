@@ -47,7 +47,8 @@ export const SparkLine = ({
     if (!derived) return null;
 
     const { pathD, fillD, isPositive } = derived;
-    const color = isPositive ? '#00FF88' : '#FF4757';
+    // Solana green for positive, loss red for negative
+    const color = isPositive ? 'hsl(157, 89%, 51%)' : 'hsl(0, 72%, 51%)';
 
     return (
         <svg

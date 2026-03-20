@@ -1,4 +1,4 @@
-import { Eye, Search, Command } from 'lucide-react';
+import { Search, Wifi } from 'lucide-react';
 import { useUiStore } from '@/stores/uiStore';
 import { VARIANTS } from '@/types/common';
 import type { Variant } from '@/types/common';
@@ -8,47 +8,55 @@ export const Header = () => {
   const { activeVariant, setVariant, toggleCommandPalette } = useUiStore();
 
   return (
-    <header className="h-14 border-b border-[var(--panel-border)] bg-[var(--bg-secondary)] flex items-center justify-between px-5 shrink-0">
+    <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/80 backdrop-blur-xl flex items-center justify-between px-5 shrink-0">
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <Eye size={22} className="text-[var(--accent-current)]" />
-          <span className="text-base font-semibold tracking-tight text-[var(--text-primary)]">
+        <div className="flex items-center gap-3">
+          <img
+            src="/Secondary_Lockup_White.svg"
+            alt="BIRDEYE"
+            className="h-5 w-auto"
+          />
+          <span className="text-muted-foreground text-xs hidden sm:inline opacity-40">|</span>
+          <span className="text-sm font-medium tracking-tight text-muted-foreground hidden sm:inline">
             Solana Monitor
           </span>
         </div>
-        <span className="text-[10px] font-medium tracking-widest uppercase text-[var(--text-muted)] ml-1">
-          by Birdeye
-        </span>
-      </div>
 
-      {/* Variant Tabs */}
-      <nav className="flex items-center gap-1">
-        {VARIANTS.map((v) => (
-          <VariantTab
-            key={v.id}
-            variant={v.id}
-            label={v.label}
-            color={v.accentColor}
-            isActive={activeVariant === v.id}
-            onClick={() => setVariant(v.id)}
-          />
-        ))}
-      </nav>
+        {/* Variant Tabs */}
+        <nav className="hidden md:flex items-center gap-0.5 ml-6 rounded-lg bg-secondary p-1">
+          {VARIANTS.map((v) => (
+            <VariantTab
+              key={v.id}
+              variant={v.id}
+              label={v.label}
+              color={v.accentColor}
+              isActive={activeVariant === v.id}
+              onClick={() => setVariant(v.id)}
+            />
+          ))}
+        </nav>
+      </div>
 
       {/* Actions */}
       <div className="flex items-center gap-3">
         <button
           onClick={toggleCommandPalette}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-hover)] border border-[var(--panel-border)] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors text-xs"
+          className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-border bg-transparent text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Search size={12} />
-          <span>Search</span>
-          <kbd className="flex items-center gap-0.5 ml-2 text-[10px] text-[var(--text-muted)]">
-            <Command size={10} />K
+          <Search size={13} />
+          <span className="text-xs">Search tokens...</span>
+          <kbd className="ml-2 pointer-events-none hidden h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+            ⌘K
           </kbd>
         </button>
-        <div className="w-2 h-2 rounded-full bg-[var(--positive)] animate-pulse" title="Live" />
+
+        <div className="flex items-center gap-1.5">
+          <Wifi className="h-3.5 w-3.5 animate-pulse-glow" style={{ color: 'var(--be-trust-teal)' }} />
+          <span className="text-[10px] rounded-full px-2 py-0.5 font-medium tracking-wide border" style={{ color: 'var(--be-trust-teal)', borderColor: 'color-mix(in srgb, var(--be-trust-teal) 30%, transparent)' }}>
+            LIVE
+          </span>
+        </div>
       </div>
     </header>
   );
@@ -67,20 +75,14 @@ interface VariantTabProps {
 const VariantTab = ({ label, color, isActive, onClick }: VariantTabProps) => (
   <button
     onClick={onClick}
+    style={isActive ? { backgroundColor: color, color: '#000000' } : undefined}
     className={cn(
-      'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm transition-all duration-200',
+      'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200',
       isActive
-        ? 'bg-[var(--bg-hover)] text-[var(--text-primary)]'
-        : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]/50'
+        ? 'shadow-sm'
+        : 'text-muted-foreground hover:text-foreground'
     )}
   >
-    <span
-      className={cn(
-        'w-2 h-2 rounded-full transition-all duration-200',
-        isActive ? 'scale-110' : 'opacity-50'
-      )}
-      style={{ backgroundColor: color }}
-    />
-    <span className="font-medium">{label}</span>
+    {label}
   </button>
 );

@@ -8,9 +8,9 @@ interface AppShellProps {
 
 export const AppShell = ({ children }: AppShellProps) => {
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[var(--bg-primary)]">
+    <div className="flex flex-col h-screen overflow-hidden bg-background">
       <Header />
-      <main className="flex-1 overflow-auto p-[var(--panel-gap)]">
+      <main className="flex-1 overflow-auto p-3">
         {children}
       </main>
       <StatusBar />

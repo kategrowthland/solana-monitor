@@ -13,27 +13,27 @@ const STATUS_CONFIG: Record<
 > = {
     healthy: {
         label: 'Healthy',
-        color: 'text-[var(--positive)]',
-        bg: 'bg-[var(--positive)]/10 border-[var(--positive)]/20',
-        pulseColor: 'bg-[var(--positive)]',
+        color: 'text-gain',
+        bg: 'bg-gain/10 border-gain/20',
+        pulseColor: 'bg-gain',
     },
     degraded: {
         label: 'Degraded',
-        color: 'text-[var(--warning)]',
-        bg: 'bg-[var(--warning)]/10 border-[var(--warning)]/20',
-        pulseColor: 'bg-[var(--warning)]',
+        color: 'text-warning',
+        bg: 'bg-warning/10 border-warning/20',
+        pulseColor: 'bg-warning',
     },
     congested: {
         label: 'Congested',
-        color: 'text-[var(--negative)]',
-        bg: 'bg-[var(--negative)]/10 border-[var(--negative)]/20',
-        pulseColor: 'bg-[var(--negative)]',
+        color: 'text-loss',
+        bg: 'bg-loss/10 border-loss/20',
+        pulseColor: 'bg-loss',
     },
     unknown: {
         label: 'Loading…',
-        color: 'text-[var(--text-muted)]',
-        bg: 'bg-[var(--bg-hover)] border-[var(--panel-border)]',
-        pulseColor: 'bg-[var(--text-muted)]',
+        color: 'text-muted-foreground',
+        bg: 'bg-secondary border-border',
+        pulseColor: 'bg-muted-foreground',
     },
 };
 

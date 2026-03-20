@@ -11,11 +11,11 @@ interface StatCardProps {
 }
 
 const BADGE_COLORS: Record<NonNullable<StatCardProps['badgeColor']>, string> = {
-    green: 'bg-[var(--positive)]/15 text-[var(--positive)]',
-    yellow: 'bg-[var(--warning)]/15 text-[var(--warning)]',
-    red: 'bg-[var(--negative)]/15 text-[var(--negative)]',
-    cyan: 'bg-[var(--accent-defi)]/15 text-[var(--accent-defi)]',
-    muted: 'bg-[var(--bg-hover)] text-[var(--text-muted)]',
+    green: 'bg-gain/15 text-gain',
+    yellow: 'bg-warning/15 text-warning',
+    red: 'bg-loss/15 text-loss',
+    cyan: 'bg-[hsl(195,100%,50%)]/15 text-[hsl(195,100%,60%)]',
+    muted: 'bg-secondary text-muted-foreground',
 };
 
 export const StatCard = ({
@@ -29,18 +29,18 @@ export const StatCard = ({
 }: StatCardProps) => (
     <div
         className={cn(
-            'flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--panel-border)] bg-[var(--bg-hover)]/50',
+            'flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-border bg-secondary/50',
             className
         )}
     >
-        <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
             {label}
         </span>
         <div className="flex items-end gap-2">
             <span
                 className={cn(
-                    'text-xl font-bold text-[var(--text-primary)] leading-none',
-                    mono && 'mono tabular-nums'
+                    'text-xl font-bold text-foreground leading-none',
+                    mono && 'font-mono tabular-nums'
                 )}
             >
                 {value}
@@ -57,7 +57,7 @@ export const StatCard = ({
             )}
         </div>
         {sub && (
-            <span className="text-[10px] text-[var(--text-muted)] leading-none">
+            <span className="text-[10px] text-muted-foreground leading-none">
                 {sub}
             </span>
         )}

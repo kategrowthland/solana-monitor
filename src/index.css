@@ -4,168 +4,224 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ── Birdeye Brand Fonts ────────────────────────── */
+@font-face {
+  font-family: 'Indivisible';
+  src: url('/fonts/Indivisible_Variable.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  /* Backgrounds */
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
-  --bg-panel: #141414;
-  --bg-panel-header: #1a1a1a;
-  --bg-hover: #1f1f1f;
+  /* ── Birdeye Brand Colors ────────────────────── */
+  /* Semantic palette (confirmed HEX from brand kit) */
+  --be-insight-blue:    #1098FF;   /* Analytics, data, reports */
+  --be-trust-teal:      #00DF96;   /* Security, compliance, trust */
+  --be-future-violet:   #741EFF;   /* Vision, strategy, innovation */
+  --be-impact-orange:   #FF5E00;   /* Community, social impact */
+  --be-growth-green:    #3ECF00;   /* Roadmap, R&D, strategy */
+  --be-talent-gold:     #FFBF00;   /* People, recruitment */
+  --be-culture-pink:    #FF58B1;   /* Culture, DEI */
 
-  /* Variant Accents */
-  --accent-solana: #F7931A;
-  --accent-defi: #00D4FF;
-  --accent-meme: #00FF88;
-  --accent-dev: #9945FF;
-  --accent-current: var(--accent-solana);
+  /* ── shadcn/ui Semantic Tokens ────────────────── */
+  --background:         228 12% 4%;
+  --foreground:         0 0% 96%;
 
-  /* Text */
-  --text-primary: #ffffff;
-  --text-secondary: #888888;
-  --text-muted: #555555;
+  --card:               228 10% 7%;
+  --card-foreground:    0 0% 96%;
 
-  /* Semantic */
-  --positive: #00FF88;
-  --negative: #FF4444;
-  --warning: #FFAA00;
-  --critical: #FF0044;
+  --popover:            228 10% 7%;
+  --popover-foreground: 0 0% 96%;
 
-  /* Severity */
-  --severity-low: #00FF88;
-  --severity-medium: #FFAA00;
-  --severity-high: #FF8800;
-  --severity-critical: #FF0044;
+  /* Primary → Insight Blue (analytics/data brand) */
+  --primary:            210 100% 54%;   /* #1098FF */
+  --primary-foreground: 0 0% 100%;
 
-  /* Panel */
-  --panel-border: rgba(255, 255, 255, 0.06);
-  --panel-radius: 12px;
-  --panel-gap: 12px;
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --secondary:          228 8% 12%;
+  --secondary-foreground: 0 0% 85%;
+
+  --muted:              228 6% 16%;
+  --muted-foreground:   228 8% 50%;
+
+  /* Accent → Insight Blue tint */
+  --accent:             210 60% 14%;
+  --accent-foreground:  210 100% 70%;
+
+  --destructive:        0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border:             228 6% 14%;
+  --input:              228 6% 14%;
+  --ring:               210 100% 54%;
+  --radius:             0.75rem;
+
+  /* ── Semantic Colours ───────────────────────────  */
+  --gain:               157 89% 44%;   /* Trust Teal-aligned green */
+  --gain-foreground:    157 89% 75%;
+  --loss:               0 72% 51%;
+  --loss-foreground:    0 72% 85%;
+  --warning:            38 92% 50%;
+  --warning-foreground: 38 92% 85%;
+
+  /* ── Feature Accent Colors (Birdeye semantic) ─── */
+  /* solana = market intelligence/analytics → Insight Blue */
+  --accent-solana:     var(--be-insight-blue);
+  /* defi = innovation/strategy → Future Violet */
+  --accent-defi:       var(--be-future-violet);
+  /* meme = community/social → Impact Orange */
+  --accent-meme:       var(--be-impact-orange);
+  /* dev = R&D/strategy → Growth Green */
+  --accent-dev:        var(--be-growth-green);
+  --accent-current:    var(--accent-solana);
+
+  /* ── Legacy custom vars (still used in panels) ── */
+  --bg-primary:        hsl(228 12% 4%);
+  --bg-secondary:      hsl(228 10% 7%);
+  --bg-panel:          hsl(228 10% 7%);
+  --bg-panel-header:   hsl(228 8% 10%);
+  --bg-hover:          hsl(228 8% 12%);
+
+  --text-primary:      hsl(0 0% 96%);
+  --text-secondary:    hsl(228 8% 50%);
+  --text-muted:        hsl(228 6% 35%);
+
+  --positive:          hsl(var(--gain));
+  --negative:          hsl(var(--loss));
+  --critical:          hsl(0 72% 51%);
+
+  --severity-low:      var(--be-trust-teal);
+  --severity-medium:   hsl(var(--warning));
+  --severity-high:     var(--be-impact-orange);
+  --severity-critical: hsl(0 72% 51%);
+
+  --panel-border:      hsl(228 6% 14% / 0.8);
+  --panel-radius:      12px;
+  --panel-gap:         12px;
+
+  /* ── Sidebar ─────────────────────────────────── */
+  --sidebar-background:          hsl(228 10% 7%);
+  --sidebar-foreground:          hsl(0 0% 85%);
+  --sidebar-primary:             hsl(210 100% 54%);
+  --sidebar-primary-foreground:  hsl(0 0% 100%);
+  --sidebar-accent:              hsl(210 60% 14%);
+  --sidebar-accent-foreground:   hsl(210 100% 70%);
+  --sidebar-border:              hsl(228 6% 14%);
+  --sidebar-ring:                hsl(210 100% 54%);
 }
 
-body {
-  margin: 0;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
-  min-height: 100vh;
-}
-
-code, .mono {
-  font-family: 'JetBrains Mono', monospace;
-}
-
+/* ── Tailwind v4 @theme mapping ────────────────── */
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm:  calc(var(--radius) - 4px);
+  --radius-md:  calc(var(--radius) - 2px);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) + 4px);
+
+  --color-background:              hsl(var(--background));
+  --color-foreground:              hsl(var(--foreground));
+  --color-card:                    hsl(var(--card));
+  --color-card-foreground:         hsl(var(--card-foreground));
+  --color-popover:                 hsl(var(--popover));
+  --color-popover-foreground:      hsl(var(--popover-foreground));
+  --color-primary:                 hsl(var(--primary));
+  --color-primary-foreground:      hsl(var(--primary-foreground));
+  --color-secondary:               hsl(var(--secondary));
+  --color-secondary-foreground:    hsl(var(--secondary-foreground));
+  --color-muted:                   hsl(var(--muted));
+  --color-muted-foreground:        hsl(var(--muted-foreground));
+  --color-accent:                  hsl(var(--accent));
+  --color-accent-foreground:       hsl(var(--accent-foreground));
+  --color-destructive:             hsl(var(--destructive));
+  --color-border:                  hsl(var(--border));
+  --color-input:                   hsl(var(--input));
+  --color-ring:                    hsl(var(--ring));
+
+  /* Birdeye brand colours */
+  --color-be-insight-blue:   var(--be-insight-blue);
+  --color-be-trust-teal:     var(--be-trust-teal);
+  --color-be-future-violet:  var(--be-future-violet);
+  --color-be-impact-orange:  var(--be-impact-orange);
+  --color-be-growth-green:   var(--be-growth-green);
+  --color-be-talent-gold:    var(--be-talent-gold);
+  --color-be-culture-pink:   var(--be-culture-pink);
+
+  /* Semantic gain / loss */
+  --color-gain:               hsl(var(--gain));
+  --color-gain-foreground:    hsl(var(--gain-foreground));
+  --color-loss:               hsl(var(--loss));
+  --color-loss-foreground:    hsl(var(--loss-foreground));
+  --color-warning:            hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  /* Sidebar */
+  --color-sidebar:                     var(--sidebar-background);
+  --color-sidebar-foreground:          var(--sidebar-foreground);
+  --color-sidebar-primary:             var(--sidebar-primary);
+  --color-sidebar-primary-foreground:  var(--sidebar-primary-foreground);
+  --color-sidebar-accent:              var(--sidebar-accent);
+  --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
+  --color-sidebar-border:              var(--sidebar-border);
+  --color-sidebar-ring:                var(--sidebar-ring);
+
+  /* Animations */
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1;   }
+  }
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to   { height: var(--radix-accordion-content-height); }
+  }
+
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to   { height: 0; }
+  }
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
+/* ── Base styles ────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'Indivisible', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, .mono, .font-mono {
+    font-family: 'Indivisible', 'JetBrains Mono', monospace;
+    font-weight: 400;
+  }
+}
+
+/* ── Utility classes ────────────────────────────── */
+@layer utilities {
+  .text-gain    { color: hsl(var(--gain)); }
+  .text-loss    { color: hsl(var(--loss)); }
+  .text-warning { color: hsl(var(--warning)); }
+  .bg-gain      { background-color: hsl(var(--gain)); }
+  .bg-loss      { background-color: hsl(var(--loss)); }
+  .bg-warning   { background-color: hsl(var(--warning)); }
+
+  .glow-insight {
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--be-insight-blue) 12%, transparent),
+      0 0 60px color-mix(in srgb, var(--be-insight-blue) 4%, transparent);
+  }
+  .glow-teal {
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--be-trust-teal) 15%, transparent),
+      0 0 60px color-mix(in srgb, var(--be-trust-teal) 5%, transparent);
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
   }
 }
